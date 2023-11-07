@@ -4,8 +4,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
-    [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private float gravity = 20f;
+    [SerializeField] private float jumpForce = 1f;
+    [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float lookSpeed = 2f;
     [SerializeField] private float viewAngles = 90f;
     [SerializeField] private Transform isGround;
@@ -29,8 +29,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        moveDirection.y -= gravity * Time.deltaTime;
-        characterController.Move(moveDirection * Time.deltaTime);
+
         if (characterController.isGrounded) { moveDirection.y = 0; }
         if (!Input.GetButtonDown("Fire1"))
         {
@@ -47,15 +46,18 @@ public class PlayerController : MonoBehaviour
             Vector3 right = transform.right * horizontalInput;
 
             moveDirection = (forward + right).normalized;
+        }
+        else
+            playerMoveAnim.SetBool("shoot", true);
 
-            if (characterController.isGrounded)
+        if (characterController.isGrounded)
             {
                 
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     playerMoveAnim.SetBool("jump", true);
-                    moveDirection.y = jumpForce;
+                    moveDirection.y += jumpForce;
                 }
                 playerMoveAnim.SetBool("jump", false);
                 if (Input.GetKey(KeyCode.LeftShift))
@@ -68,6 +70,8 @@ public class PlayerController : MonoBehaviour
                     isRunning = false;
                 }
             }
+            else
+                moveDirection.y += gravity * Time.deltaTime;
 
             float speed = isRunning ? runSpeed : moveSpeed;
             characterController.Move(moveDirection * speed * Time.deltaTime);
@@ -78,10 +82,8 @@ public class PlayerController : MonoBehaviour
 
             playerCamera.localRotation = Quaternion.Euler(rotationX, 0, 0);
             transform.rotation *= Quaternion.Euler(0, mouseX, 0);
-        }
-        else
-            playerMoveAnim.SetBool("shoot", true);
-
+        
+       
       
 
     }

@@ -28,9 +28,9 @@ public class Weapon : MonoBehaviour
         if (Time.time >= nextTimeFire)
         {
             nextTimeFire = Time.time + fireRate;
-            Ray ray = playerCamer.ViewportPointToRay(new Vector3(3f, 3f, 0));
+            Ray ray = playerCamer.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit,10f))
             {
                 if(hit.collider != null && hit.collider.CompareTag("Enemy"))
                 {
